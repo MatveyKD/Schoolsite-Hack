@@ -1,4 +1,4 @@
-from datacenter.models import *
+from datacenter.models import Schoolkid, Mark, Chastisement, Lesson, Commendation
 import random
 import logging
 
