@@ -46,8 +46,7 @@ def remove_chastisements(schoolkid_name):
         return
     schoolkid = schoolkids[0]
     chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
-    for chastisement in chastisements:
-        chastisement.delete()
+    chastisements.delete()
 
 
 def create_commendation(schoolkid_name, subject_title):
