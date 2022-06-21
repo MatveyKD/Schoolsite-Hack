@@ -6,14 +6,15 @@ import logging
 
 
 def fix_marks(schoolkid_name):
-    schoolkids = Schoolkid.objects.filter(full_name__contains=schoolkid_name)
-    if len(schoolkids) > 1:
+    try:
+        schoolkids = Schoolkid.objects.get(full_name__contains=schoolkid_name)
+    except MultipleObjectsReturned:
         logging.error(
             "Найдено больше одного ученика, содержащего такое имя." /
             "Завершение работы."
         )
         return
-    elif len(schoolkids) < 1:
+    except DoesNotExist:
         logging.error(
             "Не найдено ни одного ученика, содержащего такое имя." /
             "Завершение работы."
