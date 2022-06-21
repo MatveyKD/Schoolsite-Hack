@@ -1,14 +1,23 @@
-from datacenter.models import Schoolkid, Mark, Chastisement, Lesson, Commendation
+from datacenter.models import Schoolkid
+from datacenter.models import Mark, Lesson
+from datacenter.models import Chastisement, Commendation
 import random
 import logging
+
 
 def fix_marks(schoolkid_name):
     schoolkids = Schoolkid.objects.filter(full_name__contains=schoolkid_name)
     if len(schoolkids) > 1:
-        logging.error("Найдено больше одного ученика, содержащего такое имя. Завершение работы.")
+        logging.error(
+            "Найдено больше одного ученика, содержащего такое имя." /
+            "Завершение работы."
+        )
         return
     elif len(schoolkids) < 1:
-        logging.error("Не найдено ни одного ученика, содержащего такое имя. Завершение работы.")
+        logging.error(
+            "Не найдено ни одного ученика, содержащего такое имя." /
+            "Завершение работы."
+        )
         return
     schoolkid = schoolkids[0]
     marks = Mark.objects.filter(
@@ -20,18 +29,26 @@ def fix_marks(schoolkid_name):
         mark.save()
         print(mark.points)
 
+
 def remove_chastisements(schoolkid_name):
     schoolkids = Schoolkid.objects.filter(full_name__contains=schoolkid_name)
     if len(schoolkids) > 1:
-        logging.error("Найдено больше одного ученика, содержащего такое имя. Завершение работы.")
+        logging.error(
+            "Найдено больше одного ученика, содержащего такое имя." /
+            "Завершение работы."
+        )
         return
     elif len(schoolkids) < 1:
-        logging.error("Не найдено ни одного ученика, содержащего такое имя. Завершение работы.")
+        logging.error(
+            "Не найдено ни одного ученика, содержащего такое имя." /
+            "Завершение работы."
+        )
         return
     schoolkid = schoolkids[0]
     chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
     for chastisement in chastisements:
         chastisement.delete()
+
 
 def create_commendation(schoolkid_name, subject_title):
     commendations = [
@@ -50,10 +67,16 @@ def create_commendation(schoolkid_name, subject_title):
     ]
     schoolkids = Schoolkid.objects.filter(full_name__contains=schoolkid_name)
     if len(schoolkids) > 1:
-        logging.error("Найдено больше одного ученика, содержащего такое имя. Завершение работы.")
+        logging.error(
+            "Найдено больше одного ученика, содержащего такое имя." /
+            "Завершение работы."
+        )
         return
     elif len(schoolkids) < 1:
-        logging.error("Не найдено ни одного ученика, содержащего такое имя. Завершение работы.")
+        logging.error(
+            "Не найдено ни одного ученика, содержащего такое имя." /
+            "Завершение работы."
+        )
         return
     schoolkid = schoolkids[0]
     lesson = Lesson.objects.filter(subject__title=subject_title).last()
