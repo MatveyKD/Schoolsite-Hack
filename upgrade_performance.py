@@ -27,7 +27,6 @@ def fix_marks(schoolkid_name):
     for mark in marks:
         mark.points = 5
         mark.save()
-        print(mark.points)
 
 
 def remove_chastisements(schoolkid_name):
