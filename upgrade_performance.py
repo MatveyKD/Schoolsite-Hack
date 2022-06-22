@@ -6,21 +6,7 @@ import logging
 
 
 def fix_marks(schoolkid_name):
-    try:
-        schoolkids = Schoolkid.objects.get(full_name__contains=schoolkid_name)
-    except MultipleObjectsReturned:
-        logging.error(
-            "Найдено больше одного ученика, содержащего такое имя." /
-            "Завершение работы."
-        )
-        return
-    except DoesNotExist:
-        logging.error(
-            "Не найдено ни одного ученика, содержащего такое имя." /
-            "Завершение работы."
-        )
-        return
-    schoolkid = schoolkids[0]
+    schoolkid = get_schoolkid(schoolkid_name)
     marks = Mark.objects.filter(
         schoolkid=schoolkid,
         points__in=[2, 3]
@@ -31,20 +17,7 @@ def fix_marks(schoolkid_name):
 
 
 def remove_chastisements(schoolkid_name):
-    schoolkids = Schoolkid.objects.filter(full_name__contains=schoolkid_name)
-    if len(schoolkids) > 1:
-        logging.error(
-            "Найдено больше одного ученика, содержащего такое имя." /
-            "Завершение работы."
-        )
-        return
-    elif len(schoolkids) < 1:
-        logging.error(
-            "Не найдено ни одного ученика, содержащего такое имя." /
-            "Завершение работы."
-        )
-        return
-    schoolkid = schoolkids[0]
+    schoolkid = get_schoolkid(schoolkid_name)
     chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
     chastisements.delete()
 
@@ -64,20 +37,7 @@ def create_commendation(schoolkid_name, subject_title):
         "Я поражен!",
         "Прекрасное начало!"
     ]
-    schoolkids = Schoolkid.objects.filter(full_name__contains=schoolkid_name)
-    if len(schoolkids) > 1:
-        logging.error(
-            "Найдено больше одного ученика, содержащего такое имя." /
-            "Завершение работы."
-        )
-        return
-    elif len(schoolkids) < 1:
-        logging.error(
-            "Не найдено ни одного ученика, содержащего такое имя." /
-            "Завершение работы."
-        )
-        return
-    schoolkid = schoolkids[0]
+    schoolkid = get_schoolkid(schoolkid_name)
     lesson = Lesson.objects.filter(subject__title=subject_title).last()
     commendation = Commendation.objects.create(
         subject=lesson.subject,
@@ -86,3 +46,20 @@ def create_commendation(schoolkid_name, subject_title):
         text=random.choice(commendations),
         schoolkid_id=schoolkid.id
     )
+
+    def get_schoolkid(full_name):
+        try:
+            schoolkids = Schoolkid.objects.get(full_name__contains=full_name)
+        except MultipleObjectsReturned:
+            logging.error(
+                "Найдено больше одного ученика, содержащего такое имя." /
+                "Завершение работы."
+            )
+            return
+        except DoesNotExist:
+            logging.error(
+                "Не найдено ни одного ученика, содержащего такое имя." /
+                "Завершение работы."
+            )
+            return
+        return schoolkid
